@@ -9,29 +9,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
-	
+
 	private final LoginProcessor loginProcessor;
-	
+
 	@Autowired
 	public LoginController(LoginProcessor loginProcessor) {
 		this.loginProcessor = loginProcessor;
 	}
-	
+
 	@GetMapping("/")
 	public String loginGet() {
 		return "login.html";
 	}
 
 	@PostMapping("/")
-	public String validateLogin(@RequestParam String username, @RequestParam String password, Model model) {
+	public String loginPost(@RequestParam String username, 	@RequestParam String password, Model model) {
 		loginProcessor.setUsername(username);
 		loginProcessor.setPassword(password);
 		boolean loggedIn = loginProcessor.login();
-		String message = "Login failed";
 		if (loggedIn) {
-			message = username + ", you are now logged in";
+			return "redirect:/main";
 		}
-		model.addAttribute("message", message);
+		model.addAttribute("message", "Login failed!");
 		return "login.html";
 	}
 }
